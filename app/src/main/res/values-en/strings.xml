@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="setup_subtitle">Connect to your server</string>
+    <string name="setup_field_hint">Server address</string>
+    <string name="setup_field_helper">For example qobuz.mydomain.com or 192.168.1.42:8080 — add the port if yours differs</string>
+    <string name="setup_connect">Connect</string>
+
+    <string name="setup_error_invalid">Unreadable address. Check what you typed.</string>
+    <string name="setup_error_unreachable">No QobuzDLX instance answered.\n\nAddresses tried:\n%1$s\n\nCheck that the server is running and that the phone is on the right network. If it listens on another port, add it to the address — for example 192.168.1.42:5000.</string>
+
+    <string name="setup_cleartext_title">Unencrypted connection</string>
+    <string name="setup_cleartext_message">%1$s is not encrypted and does not look like it is on your local network. Your access password would travel in the clear, readable by any device along the way.\n\nContinue anyway?</string>
+    <string name="setup_cleartext_continue">Continue</string>
+
+    <string name="common_cancel">Cancel</string>
+
+    <string name="error_title">Server unreachable</string>
+    <string name="error_message">Could not reach %1$s.</string>
+    <string name="error_retry">Retry</string>
+    <string name="error_change_server">Change server</string>
+
+    <string name="shortcut_change_server_short">Server</string>
+    <string name="shortcut_change_server_long">Change server</string>
+</resources>

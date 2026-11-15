@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Appui long sur l'icône du lanceur → « Changer de serveur ». C'est la seule porte de sortie une
+  fois une adresse enregistrée : sans elle, il faut effacer les données de l'application.
+
+  La cible est MainActivity et non SetupActivity, qui reste exported="false". Un raccourci ne peut
+  pas poser de drapeaux d'intention : passer par l'activité déjà exportée, en singleTask, garantit
+  que l'action est bien délivrée à l'instance en cours au lieu d'empiler un second WebView.
+-->
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_change_server"
+        android:shortcutId="change-server"
+        android:shortcutLongLabel="@string/shortcut_change_server_long"
+        android:shortcutShortLabel="@string/shortcut_change_server_short">
+
+        <intent
+            android:action="com.qobuzdl.remote.CHANGE_SERVER"
+            android:targetClass="com.qobuzdl.remote.MainActivity"
+            android:targetPackage="com.qobuzdl.remote" />
+    </shortcut>
+</shortcuts>

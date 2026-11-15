@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Le trafic en clair est autorisé, et c'est un choix assumé.
+
+  La configuration réseau est figée dans l'APK alors que l'adresse du serveur est saisie à
+  l'exécution ; or <domain> n'accepte ni CIDR ni joker, donc « tout 192.168.0.0/16 » est
+  inexprimable. Une liste blanche statique obligerait à recompiler à chaque changement d'IP —
+  et finirait de toute façon passée à true.
+
+  Ce que l'autorisation ouvre réellement est étroit : l'application ne charge jamais qu'une
+  seule origine, celle que l'utilisateur a saisie et que /healthz a validée. Le risque résiduel
+  se réduit donc à « saisir par erreur une URL http:// publique », traité au moment précis où il
+  se produit par le dialogue d'avertissement de SetupActivity (voir ServerUrl.isPrivate).
+
+  Pas de <certificates src="user" /> : cela ferait confiance aux CA installées par
+  l'utilisateur, donc aux proxys d'interception. Pour une autorité personnelle, embarquer ce
+  certificat-là dans res/raw/ avec un <domain-config> qui lui est dédié.
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>

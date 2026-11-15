@@ -1,0 +1,14 @@
+*.iml
+.gradle/
+local.properties
+.idea/
+.DS_Store
+build/
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Le keystore et les mots de passe ne rentrent jamais dans le dépôt.
+*.jks
+*.keystore
+keystore.properties

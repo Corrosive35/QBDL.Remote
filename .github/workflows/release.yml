@@ -1,0 +1,139 @@
+# Publication de l'APK signée.
+#
+# Pousser un tag « v<versionName> » (par exemple v1.2) compile l'APK sur les serveurs de GitHub,
+# la signe avec le keystore de release et l'attache à une Release du même nom. Rien ne se compile
+# en local : une version se livre sans ouvrir Android Studio.
+#
+# Lancement manuel (onglet Actions → « Release APK » → « Run workflow ») : même compilation, même
+# signature, mais l'APK reste un artefact du run, sans Release publiée. Utile pour essayer une
+# branche sur le téléphone avant de la livrer.
+#
+# Secrets attendus (Settings → Secrets and variables → Actions), voir « Publier une version » dans
+# le README : QBDLX_KEYSTORE_BASE64, QBDLX_STORE_PASSWORD, QBDLX_KEY_ALIAS, QBDLX_KEY_PASSWORD.
+
+name: Release APK
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write # gh release create / upload
+
+# Deux pushs du même tag ne doivent pas se disputer la même Release.
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Un tag qui ne correspond pas à versionName publierait une « v1.3 » qui s'annonce 1.2 dans
+      # les paramètres Android : on refuse avant même de compiler.
+      - name: Version
+        id: version
+        run: |
+          version=$(sed -nE 's/^\s*versionName\s*=\s*"([^"]+)".*/\1/p' app/build.gradle.kts)
+          if [ -z "$version" ]; then
+            echo "::error::versionName introuvable dans app/build.gradle.kts."
+            exit 1
+          fi
+          if [ "$GITHUB_REF_TYPE" = "tag" ]; then
+            if [ "v$version" != "$GITHUB_REF_NAME" ]; then
+              echo "::error::Le tag $GITHUB_REF_NAME ne correspond pas à versionName = \"$version\" (app/build.gradle.kts). Attendu : v$version."
+              exit 1
+            fi
+            echo "apk=QobuzDL.Remote-v$version.apk" >> "$GITHUB_OUTPUT"
+          else
+            echo "apk=QobuzDL.Remote-v$version-${GITHUB_SHA::7}.apk" >> "$GITHUB_OUTPUT"
+          fi
+
+      # AGP 8.7 exige JDK 17.
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      # Le wrapper Gradle n'est pas versionné (c'est un binaire) : on installe directement la
+      # version qu'il désigne dans gradle-wrapper.properties.
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.9"
+
+      # Sans keystore, build.gradle.kts produit silencieusement une APK non signée, que le
+      # téléphone refuse d'installer : mieux vaut échouer ici avec un message clair. Le keystore
+      # n'existe sur le runner que le temps du job, dans un répertoire temporaire.
+      - name: Keystore de release
+        env:
+          KEYSTORE_BASE64: ${{ secrets.QBDLX_KEYSTORE_BASE64 }}
+          STORE_PASSWORD: ${{ secrets.QBDLX_STORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.QBDLX_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.QBDLX_KEY_PASSWORD }}
+        run: |
+          missing=""
+          [ -n "$KEYSTORE_BASE64" ] || missing="$missing QBDLX_KEYSTORE_BASE64"
+          [ -n "$STORE_PASSWORD" ]  || missing="$missing QBDLX_STORE_PASSWORD"
+          [ -n "$KEY_ALIAS" ]       || missing="$missing QBDLX_KEY_ALIAS"
+          [ -n "$KEY_PASSWORD" ]    || missing="$missing QBDLX_KEY_PASSWORD"
+          if [ -n "$missing" ]; then
+            echo "::error::Secrets absents :$missing. Voir « Publier une version » dans le README."
+            exit 1
+          fi
+          echo "$KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/release.jks"
+
+      # Les mots de passe passent en -P plutôt que par un gradle.properties écrit à la volée : la
+      # syntaxe .properties interprète les barres obliques inverses, qu'un mot de passe peut
+      # contenir. GitHub masque les valeurs des secrets dans le journal.
+      - name: Compilation
+        env:
+          STORE_PASSWORD: ${{ secrets.QBDLX_STORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.QBDLX_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.QBDLX_KEY_PASSWORD }}
+        run: |
+          gradle :app:assembleRelease --no-daemon \
+            -PQBDLX_STORE_FILE="$RUNNER_TEMP/release.jks" \
+            -PQBDLX_STORE_PASSWORD="$STORE_PASSWORD" \
+            -PQBDLX_KEY_ALIAS="$KEY_ALIAS" \
+            -PQBDLX_KEY_PASSWORD="$KEY_PASSWORD"
+
+      # Garde-fou final : apksigner échoue sur une APK non signée, et l'empreinte du certificat
+      # imprimée dans le journal doit être celle du keystore de release — c'est elle qui permet
+      # à la nouvelle version de remplacer l'ancienne sur le téléphone sans désinstallation.
+      - name: Vérification de la signature
+        env:
+          APK: ${{ steps.version.outputs.apk }}
+        run: |
+          apksigner="$(ls -d "$ANDROID_HOME"/build-tools/*/ | sort -V | tail -n 1)apksigner"
+          "$apksigner" verify --print-certs app/build/outputs/apk/release/app-release.apk
+          mv app/build/outputs/apk/release/app-release.apk "$APK"
+
+      - name: Publication de la Release
+        if: github.ref_type == 'tag'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          APK: ${{ steps.version.outputs.apk }}
+        run: |
+          # Relancer le job sur un tag déjà publié remplace l'APK au lieu d'échouer.
+          if gh release view "$GITHUB_REF_NAME" > /dev/null 2>&1; then
+            gh release upload "$GITHUB_REF_NAME" "$APK" --clobber
+          else
+            gh release create "$GITHUB_REF_NAME" "$APK" \
+              --title "$GITHUB_REF_NAME" \
+              --generate-notes \
+              --verify-tag
+          fi
+
+      - name: Artefact du run
+        if: github.ref_type != 'tag'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.version.outputs.apk }}
+          path: ${{ steps.version.outputs.apk }}
+          retention-days: 14
+          if-no-files-found: error
