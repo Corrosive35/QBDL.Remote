@@ -130,8 +130,8 @@ plutôt que de publier une « v1.2 » qui s'annoncerait autrement dans les param
 ### Build d'essai
 
 **Actions → Release APK → Run workflow** sur n'importe quelle branche : même compilation et même
-signature, mais aucune Release n'est publiée. L'APK se télécharge depuis la page du run (artefact
-conservé 14 jours, livré par GitHub sous forme de `.zip`).
+signature, mais aucune Release n'est publiée. L'APK se télécharge directement depuis la page du
+run (artefact conservé 14 jours).
 
 ## Trafic en clair
 

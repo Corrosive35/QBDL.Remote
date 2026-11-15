@@ -32,7 +32,7 @@ jobs:
     timeout-minutes: 30
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       # Un tag qui ne correspond pas à versionName publierait une « v1.3 » qui s'annonce 1.2 dans
       # les paramètres Android : on refuse avant même de compiler.
@@ -55,14 +55,19 @@ jobs:
           fi
 
       # AGP 8.7 exige JDK 17.
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: "17"
 
       # Le wrapper Gradle n'est pas versionné (c'est un binaire) : on installe directement la
       # version qu'il désigne dans gradle-wrapper.properties.
-      - uses: gradle/actions/setup-gradle@v4
+      #
+      # Volontairement en v5 et non en v6 : depuis la v6, le cache de cette action est un
+      # composant propriétaire, et l'adopter vaut acceptation des conditions d'utilisation de
+      # Gradle (https://blog.gradle.org/github-actions-for-gradle-v6). La v5 tourne déjà sous
+      # Node 24 et reste sous licence MIT.
+      - uses: gradle/actions/setup-gradle@v5
         with:
           gradle-version: "8.9"
 
@@ -129,11 +134,13 @@ jobs:
               --verify-tag
           fi
 
+      # archive: false livre l'APK telle quelle, au lieu d'un .zip à décompresser sur le
+      # téléphone. L'artefact prend alors le nom du fichier : pas de paramètre name.
       - name: Artefact du run
         if: github.ref_type != 'tag'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
-          name: ${{ steps.version.outputs.apk }}
           path: ${{ steps.version.outputs.apk }}
+          archive: false
           retention-days: 14
           if-no-files-found: error
