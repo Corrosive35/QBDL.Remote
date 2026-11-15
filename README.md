@@ -45,6 +45,16 @@ keytool -genkeypair -v \
   -alias qobuzdlx
 ```
 
+Sous Windows, `keytool` est fourni avec Android Studio (PowerShell) :
+
+```powershell
+& "C:\Program Files\Android\Android Studio\jbr\bin\keytool.exe" -genkeypair -v -keystore "$HOME\qobuzdlx-release.jks" -keyalg RSA -keysize 4096 -validity 10000 -alias qobuzdlx
+```
+
+`keytool` ne demande qu'**un seul mot de passe** : le keystore est au format PKCS12, qui protège
+le magasin et la clé par le même secret. Les questions d'identité qui suivent (nom, organisation…)
+n'ont aucune incidence et peuvent rester vides ; la dernière attend « oui » (ou « yes »).
+
 Déclarer les clés dans `~/.gradle/gradle.properties` — **jamais** dans le projet :
 
 ```properties
@@ -80,7 +90,7 @@ Le keystore de la section précédente est confié au dépôt sous forme de quat
 | `QBDLX_KEYSTORE_BASE64` | le fichier `.jks`, encodé en base64 (voir ci-dessous) |
 | `QBDLX_STORE_PASSWORD` | mot de passe du keystore |
 | `QBDLX_KEY_ALIAS` | `qobuzdlx` |
-| `QBDLX_KEY_PASSWORD` | mot de passe de la clé |
+| `QBDLX_KEY_PASSWORD` | mot de passe de la clé — le même que le précédent pour un keystore créé par `keytool` |
 
 Encodage du keystore, sous Windows (PowerShell, le résultat part dans le presse-papiers) :
 
