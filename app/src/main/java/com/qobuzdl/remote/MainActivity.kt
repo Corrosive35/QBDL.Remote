@@ -120,7 +120,7 @@ class MainActivity : AppCompatActivity() {
             javaScriptEnabled = true
             // sessionStorage : le garde-fou anti-rafale du script de reprise s'en sert.
             domStorageEnabled = true
-            userAgentString = "$userAgentString QobuzDLXApp/1.0"
+            userAgentString = "$userAgentString QobuzDLApp/1.0"
         }
 
         // L'interface est déjà sombre : l'assombrissement algorithmique délaverait l'accent.

@@ -25,7 +25,7 @@ data class ProbeResult(val baseUrl: String, val version: String)
  */
 object ServerUrl {
 
-    private const val TAG = "QobuzDLX"
+    private const val TAG = "QobuzDL"
     private const val TIMEOUT_MS = 4_000
     private const val EXPECTED_APP = "QobuzDLX.Web"
     private const val FALLBACK_PORT = 8080
@@ -71,7 +71,7 @@ object ServerUrl {
     /**
      * GET /healthz. Renvoie null pour tout ce qui n'est pas une instance QobuzDLX joignable :
      * l'appelant n'a pas à distinguer un DNS qui ne résout pas d'un serveur qui répond autre
-     * chose. La raison exacte part dans logcat sous l'étiquette « QobuzDLX » — c'est le seul
+     * chose. La raison exacte part dans logcat sous l'étiquette « QobuzDL » — c'est le seul
      * moyen de départager une mauvaise adresse d'un serveur trop ancien pour exposer /healthz.
      *
      * Bloquant : n'est appelé que depuis [resolve], sur Dispatchers.IO.

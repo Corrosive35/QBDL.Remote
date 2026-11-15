@@ -2,7 +2,7 @@
 <!-- Le français est la langue par défaut, comme dans l'application web dont le repli est « fr ».
      Les traductions anglaises vivent dans values-en/. -->
 <resources>
-    <string name="app_name">QobuzDLX</string>
+    <string name="app_name">QobuzDL</string>
 
     <string name="setup_subtitle">Connexion au serveur</string>
     <string name="setup_field_hint">Adresse du serveur</string>

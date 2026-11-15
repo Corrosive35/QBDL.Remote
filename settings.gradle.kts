@@ -20,5 +20,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "QobuzDLX"
+rootProject.name = "QobuzDL"
 include(":app")

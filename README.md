@@ -1,4 +1,4 @@
-# QobuzDLX — application Android
+# QobuzDL — application Android
 
 Coquille WebView qui affiche l'interface de votre instance QobuzDLX.Web. Il n'y a **aucune
 duplication d'interface** : l'application suit automatiquement chaque évolution du site.
@@ -158,7 +158,7 @@ Le message d'échec liste les adresses réellement tentées. Le détail de chaqu
 dépassé, connexion refusée, certificat, code HTTP) part dans logcat :
 
 ```bash
-adb logcat -s QobuzDLX
+adb logcat -s QobuzDL
 ```
 
 ## Structure
