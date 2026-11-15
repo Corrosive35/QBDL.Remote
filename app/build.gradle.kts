@@ -6,7 +6,7 @@ plugins {
 // Clés de signature lues depuis ~/.gradle/gradle.properties, jamais depuis le dépôt. Si la
 // propriété est absente (machine sans keystore), la config release n'est pas créée du tout et
 // assembleRelease produit un APK non signé plutôt que d'échouer.
-val keystorePath: String? = providers.gradleProperty("QBDLX_STORE_FILE").orNull
+val keystorePath: String? = providers.gradleProperty("QDLR_STORE_FILE").orNull
 
 android {
     namespace = "com.qobuzdl.remote"
@@ -26,9 +26,9 @@ android {
         if (keystorePath != null) {
             create("release") {
                 storeFile = file(keystorePath)
-                storePassword = providers.gradleProperty("QBDLX_STORE_PASSWORD").get()
-                keyAlias = providers.gradleProperty("QBDLX_KEY_ALIAS").get()
-                keyPassword = providers.gradleProperty("QBDLX_KEY_PASSWORD").get()
+                storePassword = providers.gradleProperty("QDLR_STORE_PASSWORD").get()
+                keyAlias = providers.gradleProperty("QDLR_KEY_ALIAS").get()
+                keyPassword = providers.gradleProperty("QDLR_KEY_PASSWORD").get()
             }
         }
     }

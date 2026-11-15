@@ -9,7 +9,7 @@
 # branche sur le téléphone avant de la livrer.
 #
 # Secrets attendus (Settings → Secrets and variables → Actions), voir « Publier une version » dans
-# le README : QBDLX_KEYSTORE_BASE64, QBDLX_STORE_PASSWORD, QBDLX_KEY_ALIAS, QBDLX_KEY_PASSWORD.
+# le README : QDLR_KEYSTORE_BASE64, QDLR_STORE_PASSWORD, QDLR_KEY_ALIAS, QDLR_KEY_PASSWORD.
 
 name: Release APK
 
@@ -71,16 +71,16 @@ jobs:
       # n'existe sur le runner que le temps du job, dans un répertoire temporaire.
       - name: Keystore de release
         env:
-          KEYSTORE_BASE64: ${{ secrets.QBDLX_KEYSTORE_BASE64 }}
-          STORE_PASSWORD: ${{ secrets.QBDLX_STORE_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.QBDLX_KEY_ALIAS }}
-          KEY_PASSWORD: ${{ secrets.QBDLX_KEY_PASSWORD }}
+          KEYSTORE_BASE64: ${{ secrets.QDLR_KEYSTORE_BASE64 }}
+          STORE_PASSWORD: ${{ secrets.QDLR_STORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.QDLR_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.QDLR_KEY_PASSWORD }}
         run: |
           missing=""
-          [ -n "$KEYSTORE_BASE64" ] || missing="$missing QBDLX_KEYSTORE_BASE64"
-          [ -n "$STORE_PASSWORD" ]  || missing="$missing QBDLX_STORE_PASSWORD"
-          [ -n "$KEY_ALIAS" ]       || missing="$missing QBDLX_KEY_ALIAS"
-          [ -n "$KEY_PASSWORD" ]    || missing="$missing QBDLX_KEY_PASSWORD"
+          [ -n "$KEYSTORE_BASE64" ] || missing="$missing QDLR_KEYSTORE_BASE64"
+          [ -n "$STORE_PASSWORD" ]  || missing="$missing QDLR_STORE_PASSWORD"
+          [ -n "$KEY_ALIAS" ]       || missing="$missing QDLR_KEY_ALIAS"
+          [ -n "$KEY_PASSWORD" ]    || missing="$missing QDLR_KEY_PASSWORD"
           if [ -n "$missing" ]; then
             echo "::error::Secrets absents :$missing. Voir « Publier une version » dans le README."
             exit 1
@@ -92,15 +92,15 @@ jobs:
       # contenir. GitHub masque les valeurs des secrets dans le journal.
       - name: Compilation
         env:
-          STORE_PASSWORD: ${{ secrets.QBDLX_STORE_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.QBDLX_KEY_ALIAS }}
-          KEY_PASSWORD: ${{ secrets.QBDLX_KEY_PASSWORD }}
+          STORE_PASSWORD: ${{ secrets.QDLR_STORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.QDLR_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.QDLR_KEY_PASSWORD }}
         run: |
           gradle :app:assembleRelease --no-daemon \
-            -PQBDLX_STORE_FILE="$RUNNER_TEMP/release.jks" \
-            -PQBDLX_STORE_PASSWORD="$STORE_PASSWORD" \
-            -PQBDLX_KEY_ALIAS="$KEY_ALIAS" \
-            -PQBDLX_KEY_PASSWORD="$KEY_PASSWORD"
+            -PQDLR_STORE_FILE="$RUNNER_TEMP/release.jks" \
+            -PQDLR_STORE_PASSWORD="$STORE_PASSWORD" \
+            -PQDLR_KEY_ALIAS="$KEY_ALIAS" \
+            -PQDLR_KEY_PASSWORD="$KEY_PASSWORD"
 
       # Garde-fou final : apksigner échoue sur une APK non signée, et l'empreinte du certificat
       # imprimée dans le journal doit être celle du keystore de release — c'est elle qui permet

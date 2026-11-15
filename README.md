@@ -40,15 +40,15 @@ build — le perdre interdit toute mise à jour de l'application installée :
 
 ```bash
 keytool -genkeypair -v \
-  -keystore ~/qobuzdlx-release.jks \
+  -keystore ~/qdlr-release.jks \
   -keyalg RSA -keysize 4096 -validity 10000 \
-  -alias qobuzdlx
+  -alias qdlr
 ```
 
 Sous Windows, `keytool` est fourni avec Android Studio (PowerShell) :
 
 ```powershell
-& "C:\Program Files\Android\Android Studio\jbr\bin\keytool.exe" -genkeypair -v -keystore "$HOME\qobuzdlx-release.jks" -keyalg RSA -keysize 4096 -validity 10000 -alias qobuzdlx
+& "C:\Program Files\Android\Android Studio\jbr\bin\keytool.exe" -genkeypair -v -keystore "$HOME\qdlr-release.jks" -keyalg RSA -keysize 4096 -validity 10000 -alias qdlr
 ```
 
 `keytool` ne demande qu'**un seul mot de passe** : le keystore est au format PKCS12, qui protège
@@ -58,10 +58,10 @@ n'ont aucune incidence et peuvent rester vides ; la dernière attend « oui » (
 Déclarer les clés dans `~/.gradle/gradle.properties` — **jamais** dans le projet :
 
 ```properties
-QBDLX_STORE_FILE=/home/utilisateur/qobuzdlx-release.jks
-QBDLX_STORE_PASSWORD=…
-QBDLX_KEY_ALIAS=qobuzdlx
-QBDLX_KEY_PASSWORD=…
+QDLR_STORE_FILE=/home/utilisateur/qdlr-release.jks
+QDLR_STORE_PASSWORD=…
+QDLR_KEY_ALIAS=qdlr
+QDLR_KEY_PASSWORD=…
 ```
 
 Puis :
@@ -71,7 +71,7 @@ Puis :
 apksigner verify --print-certs app/build/outputs/apk/release/app-release.apk
 ```
 
-La dernière commande doit afficher **votre** certificat. Si `QBDLX_STORE_FILE` est absente, la
+La dernière commande doit afficher **votre** certificat. Si `QDLR_STORE_FILE` est absente, la
 configuration de signature n'est pas créée et l'APK sort non signé : c'est volontaire, pour que
 le projet reste compilable sur une machine sans keystore.
 
@@ -87,21 +87,21 @@ Le keystore de la section précédente est confié au dépôt sous forme de quat
 
 | Secret | Valeur |
 | --- | --- |
-| `QBDLX_KEYSTORE_BASE64` | le fichier `.jks`, encodé en base64 (voir ci-dessous) |
-| `QBDLX_STORE_PASSWORD` | mot de passe du keystore |
-| `QBDLX_KEY_ALIAS` | `qobuzdlx` |
-| `QBDLX_KEY_PASSWORD` | mot de passe de la clé — le même que le précédent pour un keystore créé par `keytool` |
+| `QDLR_KEYSTORE_BASE64` | le fichier `.jks`, encodé en base64 (voir ci-dessous) |
+| `QDLR_STORE_PASSWORD` | mot de passe du keystore |
+| `QDLR_KEY_ALIAS` | `qdlr` |
+| `QDLR_KEY_PASSWORD` | mot de passe de la clé — le même que le précédent pour un keystore créé par `keytool` |
 
 Encodage du keystore, sous Windows (PowerShell, le résultat part dans le presse-papiers) :
 
 ```powershell
-[Convert]::ToBase64String([IO.File]::ReadAllBytes("$HOME\qobuzdlx-release.jks")) | Set-Clipboard
+[Convert]::ToBase64String([IO.File]::ReadAllBytes("$HOME\qdlr-release.jks")) | Set-Clipboard
 ```
 
 Sous Linux (`base64 -i` sous macOS) :
 
 ```bash
-base64 -w0 ~/qobuzdlx-release.jks
+base64 -w0 ~/qdlr-release.jks
 ```
 
 Il faut **le même keystore** que celui de l'APK déjà installée sur le téléphone : signée par une
