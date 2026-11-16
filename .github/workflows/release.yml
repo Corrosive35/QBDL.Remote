@@ -49,9 +49,9 @@ jobs:
               echo "::error::Le tag $GITHUB_REF_NAME ne correspond pas à versionName = \"$version\" (app/build.gradle.kts). Attendu : v$version."
               exit 1
             fi
-            echo "apk=QobuzDL.Remote-v$version.apk" >> "$GITHUB_OUTPUT"
+            echo "apk=QBDL.Remote-v$version.apk" >> "$GITHUB_OUTPUT"
           else
-            echo "apk=QobuzDL.Remote-v$version-${GITHUB_SHA::7}.apk" >> "$GITHUB_OUTPUT"
+            echo "apk=QBDL.Remote-v$version-${GITHUB_SHA::7}.apk" >> "$GITHUB_OUTPUT"
           fi
 
       # AGP 8.7 exige JDK 17.

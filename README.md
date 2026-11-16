@@ -34,7 +34,7 @@ contreviendrait, et déclinent toute responsabilité à cet égard. Le logiciel 
 quel », sans garantie d'aucune sorte (voir [LICENSE](LICENSE)).
 
 **Titulaires de droits.** Si vous estimez qu'un élément de ce dépôt porte atteinte à vos droits,
-ouvrez une [issue](https://github.com/PicSte/QobuzDL.Remote/issues) : la demande sera examinée,
+ouvrez une [issue](https://github.com/Corrosive35/QBDL.Remote/issues) : la demande sera examinée,
 et l'élément retiré promptement s'il y a lieu.
 
 ## Disclaimer
@@ -62,7 +62,7 @@ any use that would violate them, and disclaim all liability in that regard. The 
 provided "as is", without warranty of any kind (see [LICENSE](LICENSE)).
 
 **Rights holders.** If you believe anything in this repository infringes your rights, please
-open an [issue](https://github.com/PicSte/QobuzDL.Remote/issues); the request will be reviewed,
+open an [issue](https://github.com/Corrosive35/QBDL.Remote/issues); the request will be reviewed,
 and the material promptly removed where appropriate.
 
 ## Prérequis
@@ -179,7 +179,7 @@ lancement manuel, deux actions réservées aux comptes ayant l'écriture.
    git tag v1.2 && git push origin main v1.2
    ```
 
-3. Quelques minutes plus tard, la Release `v1.2` apparaît avec `QobuzDL.Remote-v1.2.apk` en
+3. Quelques minutes plus tard, la Release `v1.2` apparaît avec `QBDL.Remote-v1.2.apk` en
    pièce jointe, à ouvrir directement depuis le téléphone.
 
 Le tag doit valoir exactement `v` + `versionName` : sinon le workflow s'arrête avant de compiler,
