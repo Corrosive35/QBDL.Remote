@@ -7,6 +7,64 @@ Le projet ne contient que ce qu'un WebView nu ne sait pas faire — mémoriser l
 serveur, survivre aux rotations et aux mises en arrière-plan, et garder le cookie de
 déverrouillage d'un lancement à l'autre.
 
+## Avertissement
+
+**Projet personnel et non officiel.** Il n'a aucun lien avec Qobuz : il n'est ni affilié, ni
+approuvé, ni soutenu, ni sponsorisé par Qobuz ou par son propriétaire. « Qobuz » est une marque de
+son titulaire, employée ici à titre purement descriptif. Toutes les marques citées appartiennent à
+leurs titulaires respectifs.
+
+**Ce que contient ce dépôt.** Uniquement une application Android de type WebView, qui affiche
+l'interface web d'un serveur que l'utilisateur héberge et administre lui-même, à l'adresse qu'il
+saisit. Ce dépôt ne contient :
+
+- aucun code d'accès à un service de streaming ni à son API ;
+- aucun identifiant, jeton, clé ou secret d'application ;
+- aucun mécanisme de contournement d'une mesure technique de protection (DRM ou autre) ;
+- aucun contenu protégé : ni musique, ni pochette, ni logo ou élément graphique d'un tiers.
+
+L'application ne télécharge, ne stocke ni ne distribue elle-même aucun contenu : elle ne demande
+que l'accès à Internet et n'écrit aucun fichier sur le téléphone.
+
+**Responsabilité de l'utilisateur.** Chacun est seul responsable de l'usage qu'il fait de cette
+application et du serveur auquel il la connecte. Il lui appartient de respecter les conditions
+d'utilisation des services tiers concernés, ainsi que la législation sur le droit d'auteur en
+vigueur dans son pays. Les auteurs n'encouragent ni ne cautionnent aucun usage qui y
+contreviendrait, et déclinent toute responsabilité à cet égard. Le logiciel est fourni « tel
+quel », sans garantie d'aucune sorte (voir [LICENSE](LICENSE)).
+
+**Titulaires de droits.** Si vous estimez qu'un élément de ce dépôt porte atteinte à vos droits,
+ouvrez une [issue](https://github.com/PicSte/QobuzDL.Remote/issues) : la demande sera examinée,
+et l'élément retiré promptement s'il y a lieu.
+
+## Disclaimer
+
+**Unofficial personal project.** It is not affiliated with, endorsed, supported or sponsored by
+Qobuz or its owner. "Qobuz" is a trademark of its respective owner and is used here for
+descriptive purposes only. All trademarks mentioned belong to their respective owners.
+
+**What this repository contains.** Only a WebView-based Android app that displays the web
+interface of a server the user hosts and runs themselves, at an address they enter. This
+repository contains:
+
+- no code accessing any streaming service or its API;
+- no credentials, tokens, keys or application secrets;
+- no mechanism to circumvent any technological protection measure (DRM or otherwise);
+- no copyrighted content: no music, artwork, or third-party logos or graphics.
+
+The app itself does not download, store or distribute any content: it only requests Internet
+access and writes no files to the device.
+
+**User responsibility.** Users are solely responsible for how they use this app and the server
+they connect it to, and must comply with the terms of service of any third-party service
+involved and with the copyright laws of their country. The authors do not encourage or condone
+any use that would violate them, and disclaim all liability in that regard. The software is
+provided "as is", without warranty of any kind (see [LICENSE](LICENSE)).
+
+**Rights holders.** If you believe anything in this repository infringes your rights, please
+open an [issue](https://github.com/PicSte/QobuzDL.Remote/issues); the request will be reviewed,
+and the material promptly removed where appropriate.
+
 ## Prérequis
 
 Le serveur doit tourner en version **1.5.0 ou supérieure** : l'application interroge `/healthz`
@@ -170,3 +228,7 @@ adb logcat -s QobuzDL
 | `SetupActivity.kt` | Écran de configuration, validation avant enregistrement |
 | `MainActivity.kt` | Hôte du WebView : insets, cookies, navigation arrière, écran d'erreur |
 | `.github/workflows/release.yml` | Compilation, signature et publication de l'APK sur tag `v*` |
+
+## Licence
+
+Distribué sous licence [MIT](LICENSE). Voir aussi l'[avertissement](#avertissement) ci-dessus.
