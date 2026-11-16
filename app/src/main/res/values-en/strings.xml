@@ -2,7 +2,7 @@
 <resources>
     <string name="setup_subtitle">Connect to your server</string>
     <string name="setup_field_hint">Server address</string>
-    <string name="setup_field_helper">For example qobuz.mydomain.com or 192.168.1.42:8080 — add the port if yours differs</string>
+    <string name="setup_field_helper">For example mydomain.com or 192.168.1.42:8080 — add the port if yours differs</string>
     <string name="setup_connect">Connect</string>
 
     <string name="setup_error_invalid">Unreadable address. Check what you typed.</string>

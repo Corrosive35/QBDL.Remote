@@ -6,7 +6,7 @@
 
     <string name="setup_subtitle">Connexion au serveur</string>
     <string name="setup_field_hint">Adresse du serveur</string>
-    <string name="setup_field_helper">Par exemple qobuz.mondomaine.fr ou 192.168.1.42:8080 — précisez le port s\'il diffère</string>
+    <string name="setup_field_helper">Par exemple mondomaine.fr ou 192.168.1.42:8080 — précisez le port s\'il diffère</string>
     <string name="setup_connect">Se connecter</string>
 
     <string name="setup_error_invalid">Adresse illisible. Vérifiez la saisie.</string>
