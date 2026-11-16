@@ -4,12 +4,41 @@
 # la signe avec le keystore de release et l'attache à une Release du même nom. Rien ne se compile
 # en local : une version se livre sans ouvrir Android Studio.
 #
-# Lancement manuel (onglet Actions → « Release APK » → « Run workflow ») : même compilation, même
-# signature, mais l'APK reste un artefact du run, sans Release publiée. Utile pour essayer une
-# branche sur le téléphone avant de la livrer.
+# Lancement manuel (onglet Actions → « Release APK » → « Run workflow »), sur n'importe quelle
+# branche : même compilation, même signature, mais l'APK reste un artefact du run, téléchargeable
+# depuis sa page pendant 14 jours, sans Release publiée. Utile pour essayer une branche sur le
+# téléphone avant de la livrer.
 #
-# Secrets attendus (Settings → Secrets and variables → Actions), voir « Publier une version » dans
-# le README : QDLR_KEYSTORE_BASE64, QDLR_STORE_PASSWORD, QDLR_KEY_ALIAS, QDLR_KEY_PASSWORD.
+# Livrer une version : incrémenter versionCode et versionName dans app/build.gradle.kts, committer,
+# puis poser et pousser le tag correspondant :
+#   git tag -a v1.2 -m "QBDL Remote 1.2" && git push origin main v1.2
+# Quelques minutes plus tard, la Release v1.2 apparaît avec QBDL.Remote-v1.2.apk en pièce jointe,
+# à ouvrir directement depuis le téléphone. Le tag doit valoir exactement « v » + versionName :
+# sinon le workflow s'arrête avant de compiler, plutôt que de publier une « v1.2 » qui
+# s'annoncerait autrement dans les paramètres Android.
+#
+# Secrets attendus (Settings → Secrets and variables → Actions → New repository secret), à créer
+# une fois pour toutes à partir du keystore de release (voir « Signature release » dans le README
+# pour le générer) :
+#
+#   QDLR_KEYSTORE_BASE64   le fichier .jks, encodé en base64 (voir ci-dessous)
+#   QDLR_STORE_PASSWORD    mot de passe du keystore
+#   QDLR_KEY_ALIAS         qdlr
+#   QDLR_KEY_PASSWORD      mot de passe de la clé — le même que le précédent pour un keystore
+#                          créé par keytool
+#
+# Encodage du keystore, sous Windows (PowerShell, le résultat part dans le presse-papiers) :
+#   [Convert]::ToBase64String([IO.File]::ReadAllBytes("$HOME\qdlr-release.jks")) | Set-Clipboard
+# Sous Linux (base64 -i sous macOS) :
+#   base64 -w0 ~/qdlr-release.jks
+#
+# Il faut le même keystore que celui de l'APK déjà installée sur le téléphone : signée par une
+# autre clé, la nouvelle version serait refusée à l'installation.
+#
+# Quiconque a les droits d'écriture sur le dépôt peut modifier ce workflow et lire ces secrets :
+# ne les accordez à personne d'autre. Le dépôt peut rester public sans risque : une pull request
+# venue d'un fork ne reçoit pas les secrets, et le workflow ne se déclenche que sur un tag ou un
+# lancement manuel, deux actions réservées aux comptes ayant l'écriture.
 
 name: Release APK
 
@@ -87,7 +116,7 @@ jobs:
           [ -n "$KEY_ALIAS" ]       || missing="$missing QDLR_KEY_ALIAS"
           [ -n "$KEY_PASSWORD" ]    || missing="$missing QDLR_KEY_PASSWORD"
           if [ -n "$missing" ]; then
-            echo "::error::Secrets absents :$missing. Voir « Publier une version » dans le README."
+            echo "::error::Secrets absents :$missing. Voir l'en-tête de .github/workflows/release.yml."
             exit 1
           fi
           echo "$KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/release.jks"
