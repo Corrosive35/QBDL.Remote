@@ -1,6 +1,6 @@
 # QobuzDL — application Android
 
-Coquille WebView qui affiche l'interface de votre instance QobuzDLX.Web. Il n'y a **aucune
+Coquille WebView qui affiche l'interface de votre instance QBDL.Web. Il n'y a **aucune
 duplication d'interface** : l'application suit automatiquement chaque évolution du site.
 
 Le projet ne contient que ce qu'un WebView nu ne sait pas faire — mémoriser l'adresse du

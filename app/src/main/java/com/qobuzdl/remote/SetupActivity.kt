@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 
 /**
  * Saisie et validation de l'adresse du serveur. Rien n'est enregistré tant que /healthz n'a pas
- * confirmé qu'il s'agit bien d'une instance QobuzDLX : une faute de frappe se solde par un
+ * confirmé qu'il s'agit bien d'une instance QBDL.Web : une faute de frappe se solde par un
  * message, pas par une application qui démarre sur une page blanche.
  */
 class SetupActivity : AppCompatActivity() {

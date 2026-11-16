@@ -10,7 +10,7 @@
     <string name="setup_connect">Se connecter</string>
 
     <string name="setup_error_invalid">Adresse illisible. Vérifiez la saisie.</string>
-    <string name="setup_error_unreachable">Aucune instance QobuzDLX n\'a répondu.\n\nAdresses testées :\n%1$s\n\nVérifiez que le serveur est démarré et que le téléphone est sur le bon réseau. S\'il écoute sur un autre port, ajoutez-le à l\'adresse — par exemple 192.168.1.42:5000.</string>
+    <string name="setup_error_unreachable">Aucune instance QBDL.Web n\'a répondu.\n\nAdresses testées :\n%1$s\n\nVérifiez que le serveur est démarré et que le téléphone est sur le bon réseau. S\'il écoute sur un autre port, ajoutez-le à l\'adresse — par exemple 192.168.1.42:5000.</string>
 
     <string name="setup_cleartext_title">Connexion non chiffrée</string>
     <string name="setup_cleartext_message">%1$s n\'est pas chiffré et ne semble pas être sur votre réseau local. Votre mot de passe d\'accès circulerait en clair, lisible par tout équipement sur le chemin.\n\nContinuer quand même ?</string>

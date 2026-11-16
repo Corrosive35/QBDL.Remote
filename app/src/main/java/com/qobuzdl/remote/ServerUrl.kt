@@ -27,7 +27,12 @@ object ServerUrl {
 
     private const val TAG = "QobuzDL"
     private const val TIMEOUT_MS = 4_000
-    private const val EXPECTED_APP = "QobuzDLX.Web"
+    /**
+     * Valeurs de `app` acceptées dans la réponse de /healthz. Le serveur s'annonçait
+     * « QobuzDLX.Web » avant d'être renommé « QBDL.Web » : l'ancien nom reste reconnu pour que
+     * l'application continue de fonctionner avec une instance qui n'a pas encore été mise à jour.
+     */
+    private val EXPECTED_APPS = setOf("QBDL.Web", "QobuzDLX.Web")
     private const val FALLBACK_PORT = 8080
 
     /** La sonde renvoie deux lignes de JSON ; au-delà on cesse de lire. */
@@ -69,7 +74,7 @@ object ServerUrl {
     }
 
     /**
-     * GET /healthz. Renvoie null pour tout ce qui n'est pas une instance QobuzDLX joignable :
+     * GET /healthz. Renvoie null pour tout ce qui n'est pas une instance QBDL.Web joignable :
      * l'appelant n'a pas à distinguer un DNS qui ne résout pas d'un serveur qui répond autre
      * chose. La raison exacte part dans logcat sous l'étiquette « QobuzDL » — c'est le seul
      * moyen de départager une mauvaise adresse d'un serveur trop ancien pour exposer /healthz.
@@ -98,7 +103,7 @@ object ServerUrl {
 
             val json = JSONObject(connection.inputStream.bufferedReader().use(::readCapped))
             val app = json.optString("app")
-            if (app != EXPECTED_APP) {
+            if (app !in EXPECTED_APPS) {
                 Log.d(TAG, "$baseUrl : répond mais annonce « $app »")
                 return null
             }
