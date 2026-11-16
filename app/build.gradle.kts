@@ -18,8 +18,8 @@ android {
         // ancien pour 100dvh (Chrome 108+) et env(safe-area-inset-*), que le CSS utilise déjà.
         minSdk = 26
         targetSdk = 35
-        versionCode = 3
-        versionName = "1.1.1"
+        versionCode = 4
+        versionName = "1.1.2"
     }
 
     signingConfigs {
