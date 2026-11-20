@@ -43,8 +43,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var prefs: ServerPrefs
     private var baseUrl: String = ""
-
-    /** Vrai dès qu'une erreur réseau a remplacé la page : évite d'afficher un WebView vide. */
     private var showingError = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,10 +70,7 @@ class MainActivity : AppCompatActivity() {
         if (savedInstanceState == null) load()
     }
 
-    /**
-     * Raccourci « Changer de serveur » alors que l'application tourne déjà. Le mode singleTask
-     * ramène l'intention ici plutôt que d'empiler une seconde instance.
-     */
+    /** Raccourci « Changer de serveur » reçu alors que l'application tourne déjà (singleTask). */
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         if (intent.action == ACTION_CHANGE_SERVER) openSetup()
@@ -91,11 +86,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Le WebView est encastré entre les barres système plutôt que dessous.
-     *
-     * Conséquence assumée : env(safe-area-inset-*) reste à zéro côté CSS. C'est le seul
-     * comportement fiable — Chromium ne dérive ces valeurs que du DisplayCutout, jamais de la
-     * barre de navigation gestuelle, et pas de façon identique d'une version à l'autre.
+     * Le WebView est encastré entre les barres système plutôt que dessous, quitte à laisser
+     * env(safe-area-inset-*) à zéro côté CSS : Chromium ne dérive ces valeurs que du
+     * DisplayCutout, jamais de la barre de navigation gestuelle, et pas de la même façon d'une
+     * version à l'autre.
      */
     private fun applyInsets() {
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, insets ->
@@ -112,8 +106,7 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("SetJavaScriptEnabled")
     private fun configureWebView() {
         val web = binding.webView
-        // Sans cela le WebView est blanc le temps du premier rendu : un éclair aveuglant au
-        // lancement, sur une interface par ailleurs entièrement sombre.
+        // Sans cela, éclair blanc avant le premier rendu, sur une interface entièrement sombre.
         web.setBackgroundColor(ContextCompat.getColor(this, R.color.bg_primary))
 
         web.settings.apply {
@@ -163,15 +156,14 @@ class MainActivity : AppCompatActivity() {
                 request: WebResourceRequest,
                 error: WebResourceError
             ) {
-                // Seul l'échec du document principal justifie l'écran d'erreur ; une image
-                // manquante ne doit pas masquer une page par ailleurs fonctionnelle.
+                // Une image manquante ne doit pas masquer une page par ailleurs fonctionnelle.
                 if (request.isForMainFrame) showError()
             }
 
             /**
-             * Jamais proceed(). Le mot de passe d'accès transite sur cette connexion : un
-             * certificat qui ne valide pas, c'est soit une interception, soit une configuration
-             * à corriger côté serveur — dans les deux cas on s'arrête.
+             * Jamais proceed(). Le mot de passe transite sur cette connexion : un certificat qui
+             * ne valide pas, c'est soit une interception, soit une configuration à corriger côté
+             * serveur — dans les deux cas on s'arrête.
              */
             override fun onReceivedSslError(
                 view: WebView,

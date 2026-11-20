@@ -3,10 +3,9 @@ package com.qobuzdl.remote
 import android.content.Context
 
 /**
- * Adresse du serveur : la seule donnée que l'application persiste elle-même.
- *
- * Le mot de passe d'accès n'apparaît pas ici. Il est saisi dans la page web, échangé contre un
- * cookie que le WebView stocke de son côté, et l'application ne le voit jamais passer.
+ * Adresse du serveur : la seule donnée que l'application persiste elle-même. Le mot de passe,
+ * saisi dans la page web, est échangé contre un cookie que le WebView conserve de son côté ;
+ * l'application ne le voit jamais passer.
  */
 class ServerPrefs(context: Context) {
 

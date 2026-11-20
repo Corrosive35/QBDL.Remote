@@ -12,16 +12,13 @@ import java.net.URI
 import java.net.URL
 import java.util.Locale
 
-/** URL retenue et version renvoyée par la sonde. */
 data class ProbeResult(val baseUrl: String, val version: String)
 
 /**
- * Résolution de l'adresse du serveur saisie par l'utilisateur.
- *
- * L'application ne charge jamais qu'une seule origine, celle que l'utilisateur a validée ici.
- * C'est ce qui permet de garder [isPrivate] comme unique garde-fou contre l'envoi du mot de
- * passe en clair, plutôt qu'une liste blanche statique dans network_security_config.xml — qui
- * ne saurait de toute façon pas exprimer un plan d'adressage inconnu à la compilation.
+ * Résolution de l'adresse du serveur saisie par l'utilisateur. L'application ne charge jamais
+ * que cette origine : [isPrivate] suffit donc comme garde-fou contre l'envoi du mot de passe en
+ * clair, là où network_security_config.xml ne saurait exprimer un plan d'adressage inconnu à la
+ * compilation.
  */
 object ServerUrl {
 
@@ -35,7 +32,7 @@ object ServerUrl {
     private val EXPECTED_APPS = setOf("QBDL.Web", "QobuzDLX.Web")
     private const val FALLBACK_PORT = 8080
 
-    /** La sonde renvoie deux lignes de JSON ; au-delà on cesse de lire. */
+    /** La sonde renvoie deux champs JSON ; au-delà on cesse de lire. */
     private const val MAX_BODY_CHARS = 4_096
 
     private val IPV4 = Regex("""^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$""")
@@ -59,13 +56,9 @@ object ServerUrl {
     }
 
     /**
-     * Sonde tous les candidats de front et retient le premier de la liste qui répond.
-     *
-     * En cascade, une adresse dont les paquets sont filtrés plutôt que refusés immobilise la
-     * suivante pendant tout le délai d'attente ; quatre candidats font quinze secondes d'attente
-     * muette avant que le bon — le dernier — soit seulement tenté. De front, l'attente totale
-     * plafonne à un seul délai, et l'ordre de préférence est préservé puisque la liste des
-     * résultats est relue dans son ordre d'origine.
+     * Sonde tous les candidats de front et retient le premier de la liste qui répond. En cascade,
+     * une adresse dont les paquets sont filtrés plutôt que refusés immobiliserait les suivantes
+     * pendant tout le délai d'attente ; de front, l'attente totale plafonne à un seul délai.
      */
     suspend fun resolve(urls: List<String>): ProbeResult? = coroutineScope {
         urls.map { url -> async(Dispatchers.IO) { probe(url) } }
@@ -74,10 +67,9 @@ object ServerUrl {
     }
 
     /**
-     * GET /healthz. Renvoie null pour tout ce qui n'est pas une instance QBDL.Web joignable :
-     * l'appelant n'a pas à distinguer un DNS qui ne résout pas d'un serveur qui répond autre
-     * chose. La raison exacte part dans logcat sous l'étiquette « QobuzDL » — c'est le seul
-     * moyen de départager une mauvaise adresse d'un serveur trop ancien pour exposer /healthz.
+     * GET /healthz. Renvoie null pour tout ce qui n'est pas une instance QBDL.Web joignable ; la
+     * raison exacte part dans logcat sous l'étiquette « QobuzDL », seul moyen de départager une
+     * mauvaise adresse d'un serveur trop ancien pour exposer /healthz.
      *
      * Bloquant : n'est appelé que depuis [resolve], sur Dispatchers.IO.
      */
@@ -154,8 +146,6 @@ object ServerUrl {
             host.startsWith("fd") || host.startsWith("fc") ||   // ULA
             host.startsWith("fe80:")                            // lien-local
     }
-
-    // ─── Interne ───
 
     /**
      * Une saisie sans schéma n'est pas une URI valide : « 192.168.1.42:8080 » se lirait comme le

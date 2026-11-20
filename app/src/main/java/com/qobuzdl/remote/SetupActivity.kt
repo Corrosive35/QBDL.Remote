@@ -41,8 +41,7 @@ class SetupActivity : AppCompatActivity() {
 
         binding.serverUrl.setText(prefs.baseUrl.orEmpty())
         binding.connect.setOnClickListener { connect() }
-        // La touche « OK » du clavier vaut le bouton : sans cela elle se contente de fermer le
-        // clavier, ce qui laisse croire que la saisie n'a pas été prise en compte.
+        // La touche « OK » du clavier vaut le bouton, au lieu de seulement fermer le clavier.
         binding.serverUrl.setOnEditorActionListener { _, _, _ -> connect(); true }
     }
 
@@ -59,9 +58,8 @@ class SetupActivity : AppCompatActivity() {
 
             setBusy(false)
             if (found == null) {
-                // Lister les adresses réellement tentées est la seule façon de rendre l'échec
-                // exploitable : c'est ce qui distingue « mon serveur est éteint » de « mon
-                // serveur n'écoute pas sur le port que l'application a supposé ».
+                // Les adresses tentées distinguent « mon serveur est éteint » de « mon serveur
+                // n'écoute pas sur le port que l'application a supposé ».
                 showError(
                     getString(
                         R.string.setup_error_unreachable,
@@ -76,7 +74,7 @@ class SetupActivity : AppCompatActivity() {
 
     /**
      * Dernier filet avant d'enregistrer : en HTTP vers un hôte qui n'est ni sur le LAN ni dans un
-     * tunnel, le mot de passe d'accès partirait en clair sur le chemin. On le dit explicitement
+     * tunnel, le mot de passe partirait en clair sur le chemin. On le dit explicitement
      * plutôt que de refuser — l'utilisateur peut avoir une raison, mais il doit la connaître.
      */
     private fun accept(result: ProbeResult) {
