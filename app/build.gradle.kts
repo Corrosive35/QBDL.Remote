@@ -3,8 +3,8 @@ plugins {
     alias(libs.plugins.kotlin.android)
 }
 
-// Clés de signature lues depuis ~/.gradle/gradle.properties, jamais depuis le dépôt. Si la
-// propriété est absente (machine sans keystore), la config release n'est pas créée du tout et
+// Clés de signature lues depuis ~/.gradle/gradle.properties ou passées en -P par release.yml,
+// jamais depuis le dépôt. Sans elles, la config release n'est pas créée du tout et
 // assembleRelease produit un APK non signé plutôt que d'échouer.
 val keystorePath: String? = providers.gradleProperty("QDLR_STORE_FILE").orNull
 
@@ -36,7 +36,7 @@ android {
     buildTypes {
         release {
             // Coquille WebView : aucune réflexion, rien à obscurcir, et l'APK pèse déjà moins de
-            // 3 Mo. R8 n'apporterait ici qu'une classe de pannes difficiles à diagnostiquer.
+            // 5 Mo. R8 n'apporterait ici qu'une classe de pannes difficiles à diagnostiquer.
             isMinifyEnabled = false
             signingConfig = signingConfigs.findByName("release")
         }

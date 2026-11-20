@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  Appui long sur l'icône du lanceur → « Changer de serveur ». C'est la seule porte de sortie une
-  fois une adresse enregistrée : sans elle, il faut effacer les données de l'application.
+  Appui long sur l'icône du lanceur → « Changer de serveur » : hors écran d'erreur, le seul moyen
+  de changer d'adresse sans effacer les données de l'application.
 
   La cible est MainActivity et non SetupActivity, qui reste exported="false". Un raccourci ne peut
   pas poser de drapeaux d'intention : passer par l'activité déjà exportée, en singleTask, garantit

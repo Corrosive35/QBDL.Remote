@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  Même « Q » que wwwroot/favicon.svg, redessiné dans le canevas adaptatif de 108×108.
-
-  Le lanceur peut rogner selon n'importe quelle forme de masque : seul le disque de rayon 33
-  centré en (54,54) est garanti visible. Le glyphe y tient avec une marge — le bout de la queue,
-  point le plus excentré, culmine à 31,9.
+  Même « Q » que wwwroot/favicon.svg, redessiné dans le canevas adaptatif de 108×108. Seul le
+  disque de rayon 33 centré en (54,54) échappe à coup sûr au masque du lanceur : le bout de la
+  queue, point le plus excentré, culmine à 31,9.
 -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
@@ -18,8 +16,7 @@
         android:strokeColor="#e94560"
         android:strokeWidth="8.4" />
 
-    <!-- Queue : démarre à l'intérieur de la boucle et la traverse. C'est ce qui fait lire un Q
-         plutôt qu'une loupe. -->
+    <!-- Queue : part de l'intérieur de la boucle et la traverse, sinon on lirait une loupe. -->
     <path
         android:pathData="M 59.6,59.6 L 73.6,73.6"
         android:strokeColor="#e94560"

@@ -8,6 +8,5 @@
     <color name="text_primary">#eaeaea</color>
     <color name="text_muted">#a0a0b0</color>
 
-    <!-- Fond de l'icône adaptative : couvre les 108×108 du canevas, le lanceur y découpe sa forme. -->
     <color name="ic_launcher_background">#16213e</color>
 </resources>

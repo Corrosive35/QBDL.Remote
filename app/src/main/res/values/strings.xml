@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Le français est la langue par défaut, comme dans l'application web dont le repli est « fr ».
-     Les traductions anglaises vivent dans values-en/. -->
+<!-- Le français est la langue par défaut, comme le repli « fr » de l'application web. -->
 <resources>
     <string name="app_name">QobuzDL</string>
 
@@ -23,8 +22,7 @@
     <string name="error_retry">Réessayer</string>
     <string name="error_change_server">Changer de serveur</string>
 
-    <!-- Raccourci accessible par appui long sur l'icône du lanceur. Le libellé court est tronqué
-         au-delà d'une dizaine de caractères par la plupart des lanceurs. -->
+    <!-- Libellé court : la plupart des lanceurs tronquent au-delà de dix caractères environ. -->
     <string name="shortcut_change_server_short">Serveur</string>
     <string name="shortcut_change_server_long">Changer de serveur</string>
 </resources>

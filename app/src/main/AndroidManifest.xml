@@ -16,10 +16,9 @@
           allowBackup="false" : une restauration Auto Backup réinjecterait le cookie d'accès du
           WebView sur un nouveau téléphone, contournant l'écran de verrouillage.
 
-          configChanges est volontairement exhaustif. Sans lui, une rotation — ou un simple
-          basculement clair/sombre du système — détruit l'activité, donc le WebView, donc le
-          circuit Blazor : la reconnexion se voit, et c'est le réglage qui pèse le plus sur
-          l'impression de fluidité.
+          configChanges est volontairement exhaustif : sans lui, une rotation ou un basculement
+          clair/sombre du système détruit l'activité, donc le WebView et le circuit Blazor, et
+          la reconnexion se voit.
 
           launchMode="singleTask" : le raccourci « Changer de serveur » vise cette activité, et
           seul ce mode garantit que son action arrive dans onNewIntent de l'instance en cours
