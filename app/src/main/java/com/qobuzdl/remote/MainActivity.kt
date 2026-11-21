@@ -93,10 +93,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Le WebView est encastré entre les barres système plutôt que dessous, quitte à laisser
-     * env(safe-area-inset-*) à zéro côté CSS : Chromium ne dérive ces valeurs que du
-     * DisplayCutout, jamais de la barre de navigation gestuelle, et pas de la même façon d'une
-     * version à l'autre.
+     * Le WebView est encastré entre les barres système plutôt que dessous : la racine prend les
+     * marges en padding, ce qui protège aussi le bandeau, le panneau d'erreur et les WebView
+     * anciens, qui ignorent ces marges.
      */
     private fun applyInsets() {
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, insets ->
@@ -107,6 +106,11 @@ class MainActivity : AppCompatActivity() {
             // Le clavier remplace la barre de navigation, il ne s'y ajoute pas.
             view.updatePadding(bars.left, bars.top, bars.right, max(bars.bottom, ime.bottom))
             insets
+        }
+        // Les WebView récents passent ces marges à env(safe-area-inset-*), que la page ajoute
+        // déjà : reçues en plus du padding de la racine, elles seraient comptées deux fois.
+        ViewCompat.setOnApplyWindowInsetsListener(binding.webView) { _, _ ->
+            WindowInsetsCompat.CONSUMED
         }
     }
 
