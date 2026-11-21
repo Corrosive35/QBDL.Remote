@@ -17,6 +17,22 @@
         <item name="rippleColor">@color/t2_verre_fort</item>
     </style>
 
+    <!-- Bandeau de mise à jour : 44 dp, la cible tactile de T2, et les marges du .btn web, pour
+         que deux boutons tiennent côte à côte sur un petit écran. -->
+    <style name="Widget.QobuzDL.Button.Bandeau">
+        <item name="android:minHeight">44dp</item>
+        <item name="android:paddingStart">18dp</item>
+        <item name="android:paddingEnd">18dp</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="Widget.QobuzDL.Button.Verre.Bandeau">
+        <item name="android:minHeight">44dp</item>
+        <item name="android:paddingStart">18dp</item>
+        <item name="android:paddingEnd">18dp</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
     <!-- Champ en pilule de verre comme sur le web : le style rempli, privé de son soulignement
          (épaisseurs à 0) et de ses coins inférieurs droits (coins à 50 %). -->
     <style name="Widget.QobuzDL.TextInputLayout" parent="Widget.Material3.TextInputLayout.FilledBox">

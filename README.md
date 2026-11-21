@@ -31,6 +31,8 @@ Le projet ne contient que ce qu'un WebView nu ne sait pas faire :
 - **Écran « Serveur injoignable »** — Si la page ne se charge pas, des boutons *Réessayer* et
   *Changer de serveur* plutôt qu'une page blanche
 - **Raccourci « Changer de serveur »** — Par appui long sur l'icône de l'application
+- **Mise à jour intégrée** — Une fois par jour au plus, l'application consulte la dernière
+  Release GitHub ; si elle est plus récente, un bandeau propose de la télécharger et de l'installer
 - **Une seule origine** — Tout lien vers un autre site s'ouvre dans le navigateur : le cookie de
   connexion n'est jamais exposé à une page tierce
 - **Garde-fous réseau** — Avertissement avant d'enregistrer une adresse `http://` hors réseau privé

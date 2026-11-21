@@ -11,7 +11,7 @@
     <color name="t2_filet">#24FFFFFF</color>
     <color name="t2_piste">#3DFFFFFF</color>
 
-    <!-- t2_verre posé sur t2_nuit, en opaque : un dialogue ne laisse rien voir au travers. -->
+    <!-- t2_verre posé sur t2_nuit, en opaque : ni dialogue ni bandeau ne laissent voir dessous. -->
     <color name="t2_verre_opaque">#212226</color>
 
     <color name="ic_launcher_background">@color/t2_nuit</color>

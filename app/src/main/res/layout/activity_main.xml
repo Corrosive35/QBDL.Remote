@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/t2_nuit">
@@ -51,5 +52,66 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:text="@string/error_change_server" />
+    </LinearLayout>
+
+    <!-- Caché tant qu'aucune version plus récente n'est publiée. Posé au-dessus de la barre
+         d'onglets mobile de la page (74 px), comme les toasts de l'application web. -->
+    <LinearLayout
+        android:id="@+id/updateBanner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="86dp"
+        android:background="@drawable/bg_banner"
+        android:clickable="true"
+        android:focusable="false"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/updateMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:accessibilityLiveRegion="polite"
+            android:textColor="@color/t2_texte"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/updateProgress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:visibility="gone"
+            app:indicatorColor="@color/t2_texte"
+            app:trackColor="@color/t2_piste"
+            app:trackCornerRadius="2dp" />
+
+        <LinearLayout
+            android:id="@+id/updateButtons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:gravity="end"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/updateLater"
+                style="@style/Widget.QobuzDL.Button.Verre.Bandeau"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/update_later" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/updateAction"
+                style="@style/Widget.QobuzDL.Button.Bandeau"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="@string/update_install" />
+        </LinearLayout>
     </LinearLayout>
 </FrameLayout>

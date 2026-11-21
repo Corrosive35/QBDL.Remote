@@ -21,4 +21,16 @@
 
     <string name="shortcut_change_server_short">Server</string>
     <string name="shortcut_change_server_long">Change server</string>
+
+    <string name="update_available">Version %1$s available</string>
+    <string name="update_install">Update</string>
+    <string name="update_later">Later</string>
+    <string name="update_retry">Retry</string>
+    <string name="update_permission_message">To install the update, allow %1$s to install apps in Android settings, then come back here.</string>
+    <string name="update_permission_open">Open settings</string>
+    <string name="update_downloading">Downloading the update… %1$d%%</string>
+    <string name="update_installing">Installing version %1$s…</string>
+    <string name="update_failed_download">The download failed. Check the connection, then try again.</string>
+    <string name="update_failed_integrity">The downloaded file is incomplete or corrupted. Try again.</string>
+    <string name="update_failed_install">Android refused to install the update.</string>
 </resources>

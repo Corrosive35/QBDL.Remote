@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.net.http.SslError
 import android.os.Bundle
+import android.provider.Settings
 import android.view.View
 import android.webkit.CookieManager
 import android.webkit.SslErrorHandler
@@ -19,9 +20,13 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.webkit.WebSettingsCompat
 import androidx.webkit.WebViewFeature
 import com.qobuzdl.remote.databinding.ActivityMainBinding
+import kotlinx.coroutines.launch
 import kotlin.math.max
 
 /**
@@ -44,6 +49,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var prefs: ServerPrefs
     private var baseUrl: String = ""
     private var showingError = false
+    private var updateCheckStarted = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,6 +72,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.errorRetry.setOnClickListener { load() }
         binding.errorChangeServer.setOnClickListener { openSetup() }
+        configureUpdateBanner()
 
         if (savedInstanceState == null) load()
     }
@@ -149,6 +156,12 @@ class MainActivity : AppCompatActivity() {
                 // Le cookie d'accès est persistant côté serveur, encore faut-il que le WebView
                 // l'écrive sur disque avant qu'Android ne tue le processus.
                 CookieManager.getInstance().flush()
+
+                // Une recherche par lancement au plus, et seulement une fois la page affichée.
+                if (!showingError && !updateCheckStarted) {
+                    updateCheckStarted = true
+                    lifecycleScope.launch { AppUpdater.checkIfDue(applicationContext, prefs) }
+                }
             }
 
             override fun onReceivedError(
@@ -213,6 +226,92 @@ class MainActivity : AppCompatActivity() {
             binding.webView.evaluateJavascript(
                 "window.qbdlxResume && window.qbdlxResume();", null
             )
+        }
+
+        // Retour des réglages avec l'autorisation accordée : la mise à jour reprend d'elle-même.
+        val update = AppUpdater.state.value
+        if (update is UpdateState.NeedsPermission && packageManager.canRequestPackageInstalls()) {
+            startUpdate(update.release)
+        }
+    }
+
+    private fun configureUpdateBanner() {
+        binding.updateLater.setOnClickListener { AppUpdater.dismiss() }
+        binding.updateAction.setOnClickListener {
+            when (val update = AppUpdater.state.value) {
+                is UpdateState.Available -> startUpdate(update.release)
+                is UpdateState.Failed -> startUpdate(update.release)
+                is UpdateState.NeedsPermission -> openInstallPermission()
+                else -> Unit
+            }
+        }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                AppUpdater.state.collect { renderUpdate(it) }
+            }
+        }
+    }
+
+    private fun startUpdate(release: Release) {
+        // Vérifiée avant de télécharger : sans elle, Android bloquerait l'installation à la fin.
+        if (!packageManager.canRequestPackageInstalls()) {
+            AppUpdater.needsPermission(release)
+            return
+        }
+        lifecycleScope.launch { AppUpdater.downloadAndInstall(applicationContext, release) }
+    }
+
+    private fun openInstallPermission() {
+        val settings = Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES)
+        // Repli sur la liste générale si ce téléphone n'a pas de page propre à chaque application.
+        runCatching { startActivity(Intent(settings).setData(Uri.parse("package:$packageName"))) }
+            .onFailure { runCatching { startActivity(settings) } }
+    }
+
+    private fun renderUpdate(update: UpdateState) {
+        if (update is UpdateState.Hidden) {
+            binding.updateBanner.visibility = View.GONE
+            return
+        }
+
+        binding.updateMessage.text = when (update) {
+            is UpdateState.Available -> getString(R.string.update_available, update.release.version)
+            is UpdateState.NeedsPermission ->
+                getString(R.string.update_permission_message, getString(R.string.app_name))
+            is UpdateState.Downloading -> getString(R.string.update_downloading, update.percent)
+            is UpdateState.Confirming ->
+                getString(R.string.update_installing, update.release.version)
+            is UpdateState.Installing ->
+                getString(R.string.update_installing, update.release.version)
+            is UpdateState.Failed -> getString(update.message)
+            UpdateState.Hidden -> ""
+        }
+        binding.updateAction.setText(
+            when (update) {
+                is UpdateState.NeedsPermission -> R.string.update_permission_open
+                is UpdateState.Failed -> R.string.update_retry
+                else -> R.string.update_install
+            }
+        )
+        val actionable = update is UpdateState.Available ||
+            update is UpdateState.NeedsPermission ||
+            update is UpdateState.Failed
+        binding.updateButtons.visibility = if (actionable) View.VISIBLE else View.GONE
+        binding.updateProgress.visibility =
+            if (update is UpdateState.Downloading) View.VISIBLE else View.GONE
+        if (update is UpdateState.Downloading) {
+            binding.updateProgress.setProgressCompat(update.percent, true)
+        }
+        binding.updateBanner.visibility = View.VISIBLE
+
+        // Lancée d'ici, activité au premier plan : le récepteur de statut, en arrière-plan,
+        // n'aurait pas toujours le droit d'ouvrir l'écran de confirmation d'Android.
+        if (update is UpdateState.Confirming) {
+            if (runCatching { startActivity(update.intent) }.isSuccess) {
+                AppUpdater.confirmationShown(update.release)
+            } else {
+                AppUpdater.confirmationFailed(update.release)
+            }
         }
     }
 

@@ -15,7 +15,9 @@
 # Quelques minutes plus tard, la Release v1.2 apparaît avec QBDL.Remote-v1.2.apk en pièce jointe,
 # à ouvrir directement depuis le téléphone. Le tag doit valoir exactement « v » + versionName :
 # sinon le workflow s'arrête avant de compiler, plutôt que de publier une « v1.2 » qui
-# s'annoncerait autrement dans les paramètres Android.
+# s'annoncerait autrement dans les paramètres Android. Ce format de tag et ce nom d'APK ne doivent
+# plus changer : la mise à jour intégrée des APK déjà installées (AppUpdater.kt) les cherche tels
+# quels.
 #
 # Secrets attendus (Settings → Secrets and variables → Actions → New repository secret), à créer
 # une fois pour toutes à partir du keystore de release (voir « Signature release » dans le README

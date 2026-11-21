@@ -25,4 +25,16 @@
     <!-- Libellé court : la plupart des lanceurs tronquent au-delà de dix caractères environ. -->
     <string name="shortcut_change_server_short">Serveur</string>
     <string name="shortcut_change_server_long">Changer de serveur</string>
+
+    <string name="update_available">Version %1$s disponible</string>
+    <string name="update_install">Mettre à jour</string>
+    <string name="update_later">Plus tard</string>
+    <string name="update_retry">Réessayer</string>
+    <string name="update_permission_message">Pour installer la mise à jour, autorisez %1$s à installer des applications dans les réglages d\'Android, puis revenez ici.</string>
+    <string name="update_permission_open">Ouvrir les réglages</string>
+    <string name="update_downloading">Téléchargement de la mise à jour… %1$d\u00a0%%</string>
+    <string name="update_installing">Installation de la version %1$s…</string>
+    <string name="update_failed_download">Le téléchargement a échoué. Vérifiez la connexion, puis réessayez.</string>
+    <string name="update_failed_integrity">Le fichier téléchargé est incomplet ou altéré. Réessayez.</string>
+    <string name="update_failed_install">Android a refusé l\'installation de la mise à jour.</string>
 </resources>
