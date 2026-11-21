@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Thème sombre forcé : l'interface web l'est déjà (color-scheme: dark), suivre le réglage
-         système donnerait un écran de configuration clair devant une page sombre. -->
+    <!-- Thème sombre forcé, comme la page web (color-scheme: dark). T2 n'a pas d'accent : le
+         blanc tient lieu de primaire, la nuit et le verre remplacent les surfaces violettes de
+         Material3. -->
     <style name="Theme.QobuzDL" parent="Theme.Material3.Dark.NoActionBar">
-        <item name="colorPrimary">@color/accent</item>
-        <item name="colorOnPrimary">#ffffff</item>
-        <item name="android:windowBackground">@color/bg_primary</item>
+        <item name="colorPrimary">@color/t2_texte</item>
+        <item name="colorOnPrimary">@color/t2_nuit</item>
+        <item name="colorSecondary">@color/t2_texte</item>
+        <item name="colorOnSecondary">@color/t2_nuit</item>
+        <item name="colorSurface">@color/t2_nuit</item>
+        <item name="colorOnSurface">@color/t2_texte</item>
+        <item name="colorOnSurfaceVariant">@color/t2_texte_2</item>
+        <item name="colorSurfaceContainerHigh">@color/t2_verre_opaque</item>
+        <item name="colorOutline">@color/t2_filet</item>
+        <item name="colorOutlineVariant">@color/t2_filet</item>
+        <item name="android:colorBackground">@color/t2_nuit</item>
+        <item name="android:windowBackground">@color/t2_nuit</item>
+        <!-- Material3 ne fixe pas colorControlActivated, qui suivrait sinon un accent hérité :
+             le curseur et les poignées de sélection restent blancs. -->
+        <item name="colorControlActivated">@color/t2_texte</item>
+        <item name="android:textColorHighlight">@color/t2_piste</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">false</item>

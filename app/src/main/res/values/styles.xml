@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Pilule blanche de 52 dp, texte nuit : le bouton principal de l'écran de connexion web.
+         Sans les marges internes de Material3, la pilule occupe toute la hauteur. -->
+    <style name="Widget.QobuzDL.Button" parent="Widget.Material3.Button">
+        <item name="android:minHeight">52dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <!-- Action secondaire (.btn-secondary) : pilule de verre, texte blanc. Sans ce rippleColor,
+         l'onde du bouton plein serait couleur nuit, invisible sur le verre. -->
+    <style name="Widget.QobuzDL.Button.Verre">
+        <item name="backgroundTint">@color/t2_verre</item>
+        <item name="android:textColor">@color/t2_texte</item>
+        <item name="rippleColor">@color/t2_verre_fort</item>
+    </style>
+
+    <!-- Champ en pilule de verre comme sur le web : le style rempli, privé de son soulignement
+         (épaisseurs à 0) et de ses coins inférieurs droits (coins à 50 %). -->
+    <style name="Widget.QobuzDL.TextInputLayout" parent="Widget.Material3.TextInputLayout.FilledBox">
+        <item name="boxBackgroundColor">@color/t2_verre</item>
+        <item name="boxStrokeWidth">0dp</item>
+        <item name="boxStrokeWidthFocused">0dp</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.QobuzDL.Pilule</item>
+        <item name="android:textColorHint">@color/t2_texte_2</item>
+        <item name="hintTextColor">@color/t2_texte</item>
+        <item name="helperTextTextColor">@color/t2_texte_2</item>
+        <item name="cursorColor">@color/t2_texte</item>
+    </style>
+
+    <style name="ShapeAppearanceOverlay.QobuzDL.Pilule" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+</resources>

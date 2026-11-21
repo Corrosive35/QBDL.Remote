@@ -107,7 +107,7 @@ class MainActivity : AppCompatActivity() {
     private fun configureWebView() {
         val web = binding.webView
         // Sans cela, éclair blanc avant le premier rendu, sur une interface entièrement sombre.
-        web.setBackgroundColor(ContextCompat.getColor(this, R.color.bg_primary))
+        web.setBackgroundColor(ContextCompat.getColor(this, R.color.t2_nuit))
 
         web.settings.apply {
             javaScriptEnabled = true
@@ -116,7 +116,7 @@ class MainActivity : AppCompatActivity() {
             userAgentString = "$userAgentString QobuzDLApp/1.0"
         }
 
-        // L'interface est déjà sombre : l'assombrissement algorithmique délaverait l'accent.
+        // Interface déjà sombre : l'assombrissement algorithmique ternirait le blanc et le verre.
         if (WebViewFeature.isFeatureSupported(WebViewFeature.ALGORITHMIC_DARKENING)) {
             WebSettingsCompat.setAlgorithmicDarkeningAllowed(web.settings, false)
         }

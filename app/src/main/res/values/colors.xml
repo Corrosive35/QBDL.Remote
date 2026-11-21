@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Reprise des variables CSS de l'application web (wwwroot/css/app.css) pour que l'écran de
-     configuration et l'écran d'erreur natifs ne jurent pas avec la page une fois chargée. -->
+<!-- Jetons T2 de l'application web (wwwroot/css/app.css), noms compris, pour que les écrans
+     natifs ne jurent pas avec la page. Format #AARRGGBB : 86 % = DB, 10 % = 1A, 16 % = 29… -->
 <resources>
-    <color name="bg_primary">#1a1a2e</color>
-    <color name="bg_secondary">#16213e</color>
-    <color name="accent">#e94560</color>
-    <color name="text_primary">#eaeaea</color>
-    <color name="text_muted">#a0a0b0</color>
+    <color name="t2_nuit">#08090E</color>
+    <color name="t2_texte">#FFFFFF</color>
+    <!-- Jamais sur t2_verre_fort, comme sur le web. -->
+    <color name="t2_texte_2">#DBFFFFFF</color>
+    <color name="t2_verre">#1AFFFFFF</color>
+    <color name="t2_verre_fort">#29FFFFFF</color>
+    <color name="t2_filet">#24FFFFFF</color>
+    <color name="t2_piste">#3DFFFFFF</color>
 
-    <!-- Nuit de la palette T2 du web : l'icône l'adopte avant les écrans natifs. -->
-    <color name="ic_launcher_background">#08090E</color>
+    <!-- t2_verre posé sur t2_nuit, en opaque : un dialogue ne laisse rien voir au travers. -->
+    <color name="t2_verre_opaque">#212226</color>
+
+    <color name="ic_launcher_background">@color/t2_nuit</color>
 </resources>
