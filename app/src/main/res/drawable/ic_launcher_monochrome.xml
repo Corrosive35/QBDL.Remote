@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Mêmes tracés qu'ic_launcher_foreground, sans transparence : le système teinte la silhouette
+  des icônes thématisées, et des sillons translucides y deviendraient pâles.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M54 57.441L40.581 44.022L45.914 38.688L50.215 42.989V25.785A3.785 3.785 0 0 1 57.785 25.785V42.989L62.086 38.688L67.419 44.022Z" />
+
+    <path
+        android:pathData="M42.645 57.441A11.355 11.355 0 0 0 65.355 57.441"
+        android:strokeColor="#FFFFFF"
+        android:strokeLineCap="round"
+        android:strokeWidth="4.129" />
+
+    <path
+        android:pathData="M35.075 57.441A18.925 18.925 0 0 0 72.925 57.441"
+        android:strokeColor="#FFFFFF"
+        android:strokeLineCap="round"
+        android:strokeWidth="4.129" />
+
+    <path
+        android:pathData="M27.505 57.441A26.495 26.495 0 0 0 80.495 57.441"
+        android:strokeColor="#FFFFFF"
+        android:strokeLineCap="round"
+        android:strokeWidth="4.129" />
+</vector>

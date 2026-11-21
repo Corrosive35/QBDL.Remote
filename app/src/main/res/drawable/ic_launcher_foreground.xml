@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  Même « Q » que wwwroot/favicon.svg, redessiné dans le canevas adaptatif de 108×108. Seul le
-  disque de rayon 33 centré en (54,54) échappe à coup sûr au masque du lanceur : le bout de la
-  queue, point le plus excentré, culmine à 31,9.
+  Icône T2 : flèche blanche sur trois sillons en verre. Bouts ronds compris, le motif tient à 32
+  du centre (54,54), sous le rayon de 33 que le masque du lanceur laisse toujours visible.
 -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
@@ -10,16 +9,28 @@
     android:viewportWidth="108"
     android:viewportHeight="108">
 
-    <!-- Boucle : cercle de rayon 19,6 tracé en deux arcs, faute de primitive <circle>. -->
     <path
-        android:pathData="M 34.4,54 a 19.6,19.6 0 1,0 39.2,0 a 19.6,19.6 0 1,0 -39.2,0"
-        android:strokeColor="#e94560"
-        android:strokeWidth="8.4" />
+        android:fillColor="#FFFFFF"
+        android:pathData="M54 57.441L40.581 44.022L45.914 38.688L50.215 42.989V25.785A3.785 3.785 0 0 1 57.785 25.785V42.989L62.086 38.688L67.419 44.022Z" />
 
-    <!-- Queue : part de l'intérieur de la boucle et la traverse, sinon on lirait une loupe. -->
     <path
-        android:pathData="M 59.6,59.6 L 73.6,73.6"
-        android:strokeColor="#e94560"
+        android:pathData="M42.645 57.441A11.355 11.355 0 0 0 65.355 57.441"
+        android:strokeAlpha="1"
+        android:strokeColor="#FFFFFF"
         android:strokeLineCap="round"
-        android:strokeWidth="8.4" />
+        android:strokeWidth="4.129" />
+
+    <path
+        android:pathData="M35.075 57.441A18.925 18.925 0 0 0 72.925 57.441"
+        android:strokeAlpha="0.62"
+        android:strokeColor="#FFFFFF"
+        android:strokeLineCap="round"
+        android:strokeWidth="4.129" />
+
+    <path
+        android:pathData="M27.505 57.441A26.495 26.495 0 0 0 80.495 57.441"
+        android:strokeAlpha="0.34"
+        android:strokeColor="#FFFFFF"
+        android:strokeLineCap="round"
+        android:strokeWidth="4.129" />
 </vector>

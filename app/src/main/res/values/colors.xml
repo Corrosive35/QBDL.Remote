@@ -8,5 +8,6 @@
     <color name="text_primary">#eaeaea</color>
     <color name="text_muted">#a0a0b0</color>
 
-    <color name="ic_launcher_background">#16213e</color>
+    <!-- Nuit de la palette T2 du web : l'icône l'adopte avant les écrans natifs. -->
+    <color name="ic_launcher_background">#08090E</color>
 </resources>
