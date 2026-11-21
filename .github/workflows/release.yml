@@ -10,14 +10,26 @@
 # téléphone avant de la livrer.
 #
 # Livrer une version : incrémenter versionCode et versionName dans app/build.gradle.kts, committer,
-# puis poser et pousser le tag correspondant :
-#   git tag -a v1.2 -m "QBDL Remote 1.2" && git push origin main v1.2
-# Quelques minutes plus tard, la Release v1.2 apparaît avec QBDL.Remote-v1.2.apk en pièce jointe,
-# à ouvrir directement depuis le téléphone. Le tag doit valoir exactement « v » + versionName :
-# sinon le workflow s'arrête avant de compiler, plutôt que de publier une « v1.2 » qui
-# s'annoncerait autrement dans les paramètres Android. Ce format de tag et ce nom d'APK ne doivent
-# plus changer : la mise à jour intégrée des APK déjà installées (AppUpdater.kt) les cherche tels
-# quels.
+# puis poser et pousser le tag correspondant, avec les notes de version dans son message :
+#   git tag -a v1.2.1 --cleanup=whitespace -F notes.md && git push origin main v1.2.1
+# Quelques minutes plus tard, la Release v1.2.1 apparaît avec QBDL.Remote-v1.2.1.apk en pièce
+# jointe, à ouvrir directement depuis le téléphone. Le tag doit valoir exactement « v » +
+# versionName : sinon le workflow s'arrête avant de compiler, plutôt que de publier une « v1.2 »
+# qui s'annoncerait autrement dans les paramètres Android. Ce format de tag et ce nom d'APK ne
+# doivent plus changer : la mise à jour intégrée des APK déjà installées (AppUpdater.kt) les
+# cherche tels quels.
+#
+# Notes de version : la première ligne de notes.md sert de sujet au tag ; après une ligne vide,
+# le reste, en Markdown et en français, devient le texte de la Release, suivi du « Full
+# Changelog » de GitHub.
+# --cleanup=whitespace garde les titres Markdown (« ## … »), que git retirerait sinon comme des
+# commentaires. Un tag sans corps (-m "QBDL Remote 1.2.1") donne une Release limitée au
+# « Full Changelog ». Exemple de notes.md :
+#
+#   QBDL Remote 1.2.1 — résumé en quelques mots
+#
+#   - Première nouveauté ou correction.
+#   - Deuxième.
 #
 # Secrets attendus (Settings → Secrets and variables → Actions → New repository secret), à créer
 # une fois pour toutes à partir du keystore de release (voir « Signature release » dans le README
@@ -157,10 +169,23 @@ jobs:
           if gh release view "$GITHUB_REF_NAME" > /dev/null 2>&1; then
             gh release upload "$GITHUB_REF_NAME" "$APK" --clobber
           else
-            gh release create "$GITHUB_REF_NAME" "$APK" \
-              --title "$GITHUB_REF_NAME" \
-              --generate-notes \
-              --verify-tag
+            # actions/checkout peut ramener le tag sous forme légère, sans son message : on va
+            # chercher l'objet tag lui-même. Un échec ici ne doit pas empêcher la publication.
+            git fetch --force origin "refs/tags/$GITHUB_REF_NAME:refs/tags/$GITHUB_REF_NAME" \
+              || echo "::warning::Message du tag $GITHUB_REF_NAME introuvable, Release sans notes."
+
+            args=(--title "$GITHUB_REF_NAME" --generate-notes --verify-tag)
+            # Corps du tag annoté seulement : sur un tag léger, %(contents:body) lirait le commit.
+            if [ "$(git cat-file -t "refs/tags/$GITHUB_REF_NAME")" = tag ]; then
+              notes="$RUNNER_TEMP/notes.md"
+              git tag -l --format='%(contents:body)' "$GITHUB_REF_NAME" > "$notes"
+              # GitHub place ces notes avant le « Full Changelog » de --generate-notes, avec
+              # lequel --notes-from-tag refuse de se combiner.
+              if grep -q '[^[:space:]]' "$notes"; then
+                args+=(--notes-file "$notes")
+              fi
+            fi
+            gh release create "$GITHUB_REF_NAME" "$APK" "${args[@]}"
           fi
 
       # archive: false livre l'APK telle quelle, au lieu d'un .zip à décompresser sur le
