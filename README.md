@@ -55,7 +55,8 @@ Le projet ne contient que ce qu'un WebView nu ne sait pas faire :
 ## Installation
 
 1. Sur le téléphone, ouvrir la page [Releases](https://github.com/Corrosive35/QBDL.Remote/releases)
-   et télécharger l'APK de la dernière version (`QBDL.Remote-v<version>.apk`).
+   et télécharger l'APK de la dernière version (`QBDL.Remote-v<version>.apk`), marquée « Latest ».
+   Les Releases marquées « Pre-release » sont des versions d'essai.
 2. L'ouvrir. La première fois, Android demande d'autoriser l'installation depuis le navigateur ou
    le gestionnaire de fichiers utilisé.
 3. L'application apparaît ensuite dans le lanceur sous le nom **QobuzDL**.
@@ -191,7 +192,7 @@ configuration de signature n'est pas créée et l'APK sort non signée : c'est v
 le projet reste compilable sur une machine sans keystore.
 
 Les versions publiées sont compilées, signées et publiées par GitHub Actions : la procédure
-(secrets, tag, build d'essai) est décrite en tête de
+(secrets, tag, pré-version, build d'essai) est décrite en tête de
 [`.github/workflows/release.yml`](.github/workflows/release.yml).
 
 ---

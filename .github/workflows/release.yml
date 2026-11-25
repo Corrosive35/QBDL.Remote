@@ -14,10 +14,23 @@
 #   git tag -a v1.2.1 --cleanup=whitespace -F notes.md && git push origin main v1.2.1
 # Quelques minutes plus tard, la Release v1.2.1 apparaît avec QBDL.Remote-v1.2.1.apk en pièce
 # jointe, à ouvrir directement depuis le téléphone. Le tag doit valoir exactement « v » +
-# versionName : sinon le workflow s'arrête avant de compiler, plutôt que de publier une « v1.2 »
-# qui s'annoncerait autrement dans les paramètres Android. Ce format de tag et ce nom d'APK ne
-# doivent plus changer : la mise à jour intégrée des APK déjà installées (AppUpdater.kt) les
-# cherche tels quels.
+# versionName, suivi au plus d'un suffixe de pré-version (ci-dessous) : sinon le workflow s'arrête
+# avant de compiler, plutôt que de publier une « v1.2 » qui s'annoncerait autrement dans les
+# paramètres Android. Ce format de tag et ce nom d'APK ne doivent plus changer : la mise à jour
+# intégrée des APK déjà installées (AppUpdater.kt) les cherche tels quels.
+#
+# Publier une pré-version, pour installer une APK d'essai depuis le téléphone avant de livrer :
+# même procédure, avec un tag « v<versionName>-rc.<n> », n partant de 1, posé sur un commit dont
+# versionName est déjà celui de la version à venir :
+#   git tag -a v1.3.0-rc.1 --cleanup=whitespace -F notes.md && git push origin main v1.3.0-rc.1
+# La Release v1.3.0-rc.1, marquée pré-version, porte QBDL.Remote-v1.3.0-rc.1.apk et les notes du
+# tag. La mise à jour intégrée ne la voit pas : elle ne lit que releases/latest, qui écarte les
+# pré-versions.
+# L'APK d'essai a le même versionName et le même versionCode que la version finale : le bandeau ne
+# propose donc pas la finale à un téléphone qui a la pré-version. Posez le tag final sur le commit
+# de la dernière pré-version : ce téléphone a alors déjà le contenu de la finale. Sinon, installez
+# la finale à la main depuis la page des Releases : Android accepte de remplacer une APK de même
+# versionCode. Le bandeau proposera de nouveau la version suivante.
 #
 # Notes de version : la première ligne de notes.md sert de sujet au tag ; après une ligne vide,
 # le reste, en Markdown et en français, devient le texte de la Release, suivi du « Full
@@ -86,11 +99,16 @@ jobs:
             exit 1
           fi
           if [ "$GITHUB_REF_TYPE" = "tag" ]; then
-            if [ "v$version" != "$GITHUB_REF_NAME" ]; then
-              echo "::error::Le tag $GITHUB_REF_NAME ne correspond pas à versionName = \"$version\" (app/build.gradle.kts). Attendu : v$version."
+            # Motif entre guillemets : les points de versionName y sont pris à la lettre.
+            suffix="${GITHUB_REF_NAME#"v$version"}"
+            if [ "$suffix" = "$GITHUB_REF_NAME" ] ||
+               ! [[ "$suffix" =~ ^(-rc\.[1-9][0-9]*)?$ ]]; then
+              echo "::error::Le tag $GITHUB_REF_NAME ne correspond pas à versionName = \"$version\" (app/build.gradle.kts). Attendu : v$version, ou v$version-rc.<n> pour une pré-version."
               exit 1
             fi
-            echo "apk=QBDL.Remote-v$version.apk" >> "$GITHUB_OUTPUT"
+            echo "apk=QBDL.Remote-$GITHUB_REF_NAME.apk" >> "$GITHUB_OUTPUT"
+            if [ -n "$suffix" ]; then prerelease=true; else prerelease=false; fi
+            echo "prerelease=$prerelease" >> "$GITHUB_OUTPUT"
           else
             echo "apk=QBDL.Remote-v$version-${GITHUB_SHA::7}.apk" >> "$GITHUB_OUTPUT"
           fi
@@ -164,6 +182,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           APK: ${{ steps.version.outputs.apk }}
+          PRERELEASE: ${{ steps.version.outputs.prerelease }}
         run: |
           # Relancer le job sur un tag déjà publié remplace l'APK au lieu d'échouer.
           if gh release view "$GITHUB_REF_NAME" > /dev/null 2>&1; then
@@ -175,6 +194,9 @@ jobs:
               || echo "::warning::Message du tag $GITHUB_REF_NAME introuvable, Release sans notes."
 
             args=(--title "$GITHUB_REF_NAME" --generate-notes --verify-tag)
+            # Une pré-version n'est jamais « Latest » : releases/latest, que lit la mise à jour
+            # intégrée, l'ignore.
+            if [ "$PRERELEASE" = true ]; then args+=(--prerelease); fi
             # Corps du tag annoté seulement : sur un tag léger, %(contents:body) lirait le commit.
             if [ "$(git cat-file -t "refs/tags/$GITHUB_REF_NAME")" = tag ]; then
               notes="$RUNNER_TEMP/notes.md"
