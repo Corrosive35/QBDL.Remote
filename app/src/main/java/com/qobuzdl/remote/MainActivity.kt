@@ -43,6 +43,22 @@ class MainActivity : AppCompatActivity() {
          * enregistré sans une saisie de l'utilisateur validée par /healthz.
          */
         const val ACTION_CHANGE_SERVER = "com.qobuzdl.remote.CHANGE_SERVER"
+
+        /**
+         * Lien de retour qbdlremote://signed-in, ouvert depuis le navigateur du téléphone par la
+         * page qui termine une connexion. Il ne transporte rien : chemin, paramètres et fragment
+         * sont ignorés, et il ne fait que recharger l'adresse déjà enregistrée, jamais une URL
+         * reçue. Une application tierce qui l'émet n'obtient donc qu'un rechargement.
+         */
+        private const val RETURN_SCHEME = "qbdlremote"
+        private const val RETURN_HOST = "signed-in"
+
+        /**
+         * Ajouté à l'User-Agent, ce jeton annonce que cette version sait recevoir le lien de
+         * retour. Le serveur n'ouvre le lien que pour une connexion lancée depuis un WebView qui
+         * le porte : une APK plus ancienne, sans intent-filter pour ce lien, n'y est pas exposée.
+         */
+        private const val RETURN_UA_TOKEN = "QBDLReturn/1"
     }
 
     private lateinit var binding: ActivityMainBinding
@@ -50,6 +66,7 @@ class MainActivity : AppCompatActivity() {
     private var baseUrl: String = ""
     private var showingError = false
     private var updateCheckStarted = false
+    private var reloadOnResume = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,13 +91,32 @@ class MainActivity : AppCompatActivity() {
         binding.errorChangeServer.setOnClickListener { openSetup() }
         configureUpdateBanner()
 
+        // Lancée à froid par le lien de retour, l'activité n'a rien d'autre à faire que ce
+        // chargement : le lien n'est traité que dans onNewIntent, pour ne pas le doubler.
         if (savedInstanceState == null) load()
     }
 
-    /** Raccourci « Changer de serveur » reçu alors que l'application tourne déjà (singleTask). */
+    /**
+     * Raccourci « Changer de serveur » ou lien de retour, reçus alors que l'application tourne
+     * déjà (singleTask).
+     */
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        if (intent.action == ACTION_CHANGE_SERVER) openSetup()
+        when {
+            intent.action == ACTION_CHANGE_SERVER -> openSetup()
+            isReturnLink(intent) -> reloadOnResume = true
+        }
+    }
+
+    /**
+     * Vérifié ici et pas seulement par l'intent-filter, qui ne filtre pas les intents
+     * explicites : l'activité est exportée, n'importe quelle application peut la viser.
+     */
+    private fun isReturnLink(intent: Intent): Boolean {
+        val link = intent.data ?: return false
+        return intent.action == Intent.ACTION_VIEW &&
+            link.scheme == RETURN_SCHEME &&
+            link.host == RETURN_HOST
     }
 
     /**
@@ -124,7 +160,8 @@ class MainActivity : AppCompatActivity() {
             javaScriptEnabled = true
             // sessionStorage : le garde-fou anti-rafale du script de reprise s'en sert.
             domStorageEnabled = true
-            userAgentString = "$userAgentString QobuzDLApp/1.0"
+            // Le premier jeton identifie l'application auprès du serveur et ne doit pas changer.
+            userAgentString = "$userAgentString QobuzDLApp/1.0 $RETURN_UA_TOKEN"
         }
 
         // Interface déjà sombre : l'assombrissement algorithmique ternirait le blanc et le verre.
@@ -224,9 +261,16 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        // La Page Visibility API n'est pas fiable dans un WebView mis en pause selon la version
-        // de Chromium embarquée : on déclenche la reprise depuis le cycle de vie Android.
-        if (!showingError) {
+        if (reloadOnResume) {
+            // Retour par le lien de connexion : la page affichée date d'avant la connexion, on
+            // repart de l'adresse enregistrée. Rechargée ici plutôt que dans onNewIntent pour
+            // remplacer le script de reprise : lancé sur l'ancienne page, il pourrait faire son
+            // propre location.reload() par-dessus ce chargement.
+            reloadOnResume = false
+            load()
+        } else if (!showingError) {
+            // La Page Visibility API n'est pas fiable dans un WebView mis en pause selon la
+            // version de Chromium embarquée : on déclenche la reprise depuis le cycle de vie.
             binding.webView.evaluateJavascript(
                 "window.qbdlxResume && window.qbdlxResume();", null
             )

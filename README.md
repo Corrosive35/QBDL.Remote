@@ -28,6 +28,9 @@ Le projet ne contient que ce qu'un WebView nu ne sait pas faire :
   recharge pas la page
 - **Reprise après l'arrière-plan** — Au retour au premier plan, l'application demande à la page de
   se resynchroniser, la Page Visibility API n'étant pas fiable dans un WebView mis en pause
+- **Retour après connexion** — Une connexion qui passe par le navigateur du téléphone, comme celle
+  du compte de streaming, ramène d'elle-même dans l'application, qui se recharge. Le lien de retour
+  ne transporte rien : il ne recharge que le serveur enregistré. Le serveur doit proposer ce retour
 - **Écran « Serveur injoignable »** — Si la page ne se charge pas, des boutons *Réessayer* et
   *Changer de serveur* plutôt qu'une page blanche
 - **Raccourci « Changer de serveur »** — Par appui long sur l'icône de l'application

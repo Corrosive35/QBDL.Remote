@@ -26,7 +26,8 @@
 
           launchMode="singleTask" : le raccourci « Changer de serveur » vise cette activité, et
           seul ce mode garantit que son action arrive dans onNewIntent de l'instance en cours
-          plutôt que d'ouvrir un second WebView par-dessus le premier.
+          plutôt que d'ouvrir un second WebView par-dessus le premier. Il en va de même du lien
+          de retour, qui recharge le WebView en place.
         -->
         <activity
             android:name=".MainActivity"
@@ -38,6 +39,21 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <!--
+              Lien de retour qbdlremote://signed-in. Une connexion ouverte dans le navigateur du
+              téléphone se termine sur une page du serveur, qui rouvre l'application par ce lien
+              pour qu'elle se recharge. BROWSABLE permet au navigateur de l'ouvrir. Le lien ne
+              transporte rien : MainActivity ignore chemin, paramètres et fragment.
+            -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:host="signed-in"
+                    android:scheme="qbdlremote" />
             </intent-filter>
 
             <meta-data
